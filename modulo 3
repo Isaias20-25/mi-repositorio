@@ -1,0 +1,42 @@
+public class VisitanteEdificio {
+
+    public static void main(String[] args) {
+        // Información del visitante 
+
+        // Edad del visitante
+        byte edad = 28;
+
+        // Piso a visitar 
+        short piso = 5;
+
+        // Número de identificación
+        int idVisitante = 123456;
+
+        // Teléfono del visitante 
+        long telefono = 559912345678L;
+
+        // Temperatura corporal 
+        float temperatura = 36.6;
+
+        // Tiempo de permanencia en minutos
+        double tiempoPermanencia = 45.5;
+
+        // Género del visitante (char)
+        char genero = 'M';
+
+        // ¿El visitante está autorizado?
+        boolean autorizado = true;
+
+        // Imprimir información
+        System.out.println("=== Información del Visitante ===");
+        System.out.println("ID: " + idVisitante);
+        System.out.println("Edad: " + edad + " años");
+        System.out.println("Piso a visitar: " + piso);
+        System.out.println("Teléfono: " + telefono);
+        System.out.println("Temperatura corporal: " + temperatura + " °C");
+        System.out.println("Tiempo de permanencia: " + tiempoPermanencia + " minutos");
+        System.out.println("Género: " + genero);
+        System.out.println("Autorizado: " + autorizado);
+    }
+}
+
