@@ -1,0 +1,118 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+
+// Clase Usuario
+class Usuario {
+    private String nombre;
+    private String correo;
+    private String contrasena;
+
+    public Usuario(String nombre, String correo, String contrasena) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.contrasena = contrasena;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    @Override
+    public String toString() {
+        return "Nombre: " + nombre + ", Correo: " + correo;
+    }
+}
+
+// Clase Validador
+class Validador {
+    
+    public static boolean validarNombre(String nombre) {
+        // Solo letras y espacios
+        return Pattern.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", nombre);
+    }
+
+    public static boolean validarCorreo(String correo) {
+        // Patrón básico de correo electrónico
+        return Pattern.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", correo);
+    }
+
+    public static boolean validarContrasena(String contrasena) {
+        // Mínimo 8 caracteres, una mayúscula, una minúscula y un número
+        return Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$", contrasena);
+    }
+}
+
+// Clase principal
+public class parcial#2{
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Usuario> usuarios = new ArrayList<>();
+
+        System.out.println("=== Sistema de Registro de Usuarios ===");
+
+        boolean continuar = true;
+        while (continuar) {
+            System.out.println("\n--- Nuevo Registro ---");
+
+            // Nombre
+            String nombre;
+            do {
+                System.out.print("Ingrese su nombre: ");
+                nombre = scanner.nextLine();
+                if (!Validador.validarNombre(nombre)) {
+                    System.out.println("⚠️ Nombre inválido. Solo letras y espacios.");
+                }
+            } while (!Validador.validarNombre(nombre));
+
+            // Correo
+            String correo;
+            do {
+                System.out.print("Ingrese su correo electrónico: ");
+                correo = scanner.nextLine();
+                if (!Validador.validarCorreo(correo)) {
+                    System.out.println("⚠️ Correo inválido. Ejemplo válido: ejemplo@correo.com");
+                }
+            } while (!Validador.validarCorreo(correo));
+
+            // Contraseña
+            String contrasena;
+            do {
+                System.out.print("Ingrese su contraseña: ");
+                contrasena = scanner.nextLine();
+                if (!Validador.validarContrasena(contrasena)) {
+                    System.out.println("⚠️ Contraseña inválida. Debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.");
+                }
+            } while (!Validador.validarContrasena(contrasena));
+
+            // Crear y guardar el usuario
+            Usuario usuario = new Usuario(nombre, correo, contrasena);
+            usuarios.add(usuario);
+
+            System.out.println("✅ Usuario registrado exitosamente.");
+
+            // Preguntar si desea agregar otro usuario
+            System.out.print("\n¿Desea registrar otro usuario? (s/n): ");
+            String respuesta = scanner.nextLine();
+            if (!respuesta.equalsIgnoreCase("s")) {
+                continuar = false;
+            }
+        }
+
+        // Mostrar usuarios registrados
+        System.out.println("\n=== Lista de Usuarios Registrados ===");
+        for (Usuario u : usuarios) {
+            System.out.println(u);
+        }
+
+        System.out.println("\n✅ Programa finalizado.");
+    }
+}
