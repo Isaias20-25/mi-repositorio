@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class VisitanteEdificio {
 
     public static void main(String[] args) {
