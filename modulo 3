@@ -1,0 +1,57 @@
+public class VisitanteEdificio {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Declaración de variables
+        byte edad;
+        short piso;
+        int idVisitante;
+        long telefono;
+        float temperatura;
+        double tiempoPermanencia;
+        char genero;
+        boolean autorizado;
+
+        // Solicitar datos
+        System.out.println("=== Registro de Visitante ===");
+
+        System.out.print("ID del visitante: ");
+        idVisitante = scanner.nextInt();
+
+        System.out.print("Edad del visitante: ");
+        edad = scanner.nextByte();
+
+        System.out.print("Piso a visitar: ");
+        piso = scanner.nextShort();
+
+        System.out.print("Número de teléfono: ");
+        telefono = scanner.nextLong();
+
+        System.out.print("Temperatura corporal: ");
+        temperatura = scanner.nextFloat();
+
+        System.out.print("Tiempo de permanencia en minutos: ");
+        tiempoPermanencia = scanner.nextDouble();
+
+        System.out.print("Género (M/F): ");
+        genero = scanner.next().charAt(0);
+
+        System.out.print("¿Está autorizado? (true/false): ");
+        autorizado = scanner.nextBoolean();
+
+        // Mostrar los datos
+        System.out.println("\n=== Información del Visitante ===");
+        System.out.println("ID: " + idVisitante);
+        System.out.println("Edad: " + edad + " años");
+        System.out.println("Piso a visitar: " + piso);
+        System.out.println("Teléfono: " + telefono);
+        System.out.println("Temperatura corporal: " + temperatura + " °C");
+        System.out.println("Tiempo de permanencia: " + tiempoPermanencia + " minutos");
+        System.out.println("Género: " + genero);
+        System.out.println("Autorizado: " + autorizado);
+
+        scanner.close();
+    }
+}
+
