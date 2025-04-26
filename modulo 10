@@ -1,0 +1,123 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.function.Consumer;
+
+// Clase que implementa Runnable
+class ValidadorContrasena implements Runnable {
+    private String contrasena;
+
+    public ValidadorContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    @Override
+    public void run() {
+        String resultado = validarContrasena();
+        escribirEnArchivo(resultado);
+    }
+
+    private String validarContrasena() {
+        boolean esValida = true;
+        StringBuilder errores = new StringBuilder();
+
+        if (contrasena.length() < 8) {
+            errores.append("- Mínimo 8 caracteres.\n");
+            esValida = false;
+        }
+        if (!contrasena.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+            errores.append("- Al menos un caracter especial.\n");
+            esValida = false;
+        }
+
+        Pattern mayusculas = Pattern.compile("[A-Z]");
+        Matcher matcherMayusculas = mayusculas.matcher(contrasena);
+        long contadorMayusculas = matcherMayusculas.results().count();
+        if (contadorMayusculas < 2) {
+            errores.append("- Al menos 2 letras mayúsculas.\n");
+            esValida = false;
+        }
+
+        Pattern minusculas = Pattern.compile("[a-z]");
+        Matcher matcherMinusculas = minusculas.matcher(contrasena);
+        long contadorMinusculas = matcherMinusculas.results().count();
+        if (contadorMinusculas < 3) {
+            errores.append("- Al menos 3 letras minúsculas.\n");
+            esValida = false;
+        }
+
+        if (!contrasena.matches(".*\\d.*")) {
+            errores.append("- Al menos un número.\n");
+            esValida = false;
+        }
+
+        StringBuilder resultado = new StringBuilder();
+        resultado.append("\n[Hilo: ").append(Thread.currentThread().getName()).append("]\n");
+        resultado.append("Contraseña: ").append(contrasena).append("\n");
+
+        if (esValida) {
+            resultado.append("Contraseña válida.\n");
+        } else {
+            resultado.append("Contraseña inválida:\n").append(errores);
+        }
+
+        System.out.println(resultado.toString());
+        return resultado.toString();
+    }
+
+    private void escribirEnArchivo(String resultado) {
+        Consumer<String> escribir = (texto) -> {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("registro.txt", true))) {
+                writer.write(texto);
+                writer.newLine();
+            } catch (IOException e) {
+                System.out.println("Error escribiendo en archivo: " + e.getMessage());
+            }
+        };
+        escribir.accept(resultado);
+    }
+}
+
+public class modulo 10 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Thread> hilos = new ArrayList<>();
+
+        System.out.println("= Validador de Contraseñas Concurrente + Archivo=");
+
+        System.out.print("\n¿Cuántas contraseñas deseas validar?: ");
+        int cantidad = scanner.nextInt();
+        scanner.nextLine(); // Limpiar buffer
+
+        // Limpia el archivo antes de empezar
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("registro.txt"))) {
+            writer.write("=Registro de Validaciones de Contraseñas=\n");
+        } catch (IOException e) {
+            System.out.println("Error inicializando el archivo: " + e.getMessage());
+        }
+
+        for (int i = 0; i < cantidad; i++) {
+            System.out.print("\nIngresa la contraseña #" + (i + 1) + ": ");
+            String contrasena = scanner.nextLine();
+
+            ValidadorContrasena validador = new ValidadorContrasena(contrasena);
+            Thread hilo = new Thread(validador, "Hilo-" + (i + 1));
+            hilos.add(hilo);
+            hilo.start();
+        }
+
+        for (Thread hilo : hilos) {
+            try {
+                hilo.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("\nValidación completada. Resultados almacenados en registro.txt");
+    }
+}
