@@ -1,0 +1,110 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+// Clase que implementa Runnable para validación de contraseña
+class ValidadorContrasena implements Runnable {
+    private String contrasena;
+
+    public ValidadorContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    @Override
+    public void run() {
+        validarContrasena();
+    }
+
+    private void validarContrasena() {
+        boolean esValida = true;
+        StringBuilder errores = new StringBuilder();
+
+        // Longitud mínima de 8
+        if (contrasena.length() < 8) {
+            errores.append("- Debe tener al menos 8 caracteres.\n");
+            esValida = false;
+        }
+
+        // Al menos un caracter especial
+        if (!contrasena.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+            errores.append("- Debe contener al menos un caracter especial.\n");
+            esValida = false;
+        }
+
+        // Al menos dos letras mayúsculas
+        Pattern mayusculas = Pattern.compile("[A-Z]");
+        Matcher matcherMayusculas = mayusculas.matcher(contrasena);
+        int contadorMayusculas = 0;
+        while (matcherMayusculas.find()) {
+            contadorMayusculas++;
+        }
+        if (contadorMayusculas < 2) {
+            errores.append("- Debe contener al menos 2 letras mayúsculas.\n");
+            esValida = false;
+        }
+
+        // Al menos tres letras minúsculas
+        Pattern minusculas = Pattern.compile("[a-z]");
+        Matcher matcherMinusculas = minusculas.matcher(contrasena);
+        int contadorMinusculas = 0;
+        while (matcherMinusculas.find()) {
+            contadorMinusculas++;
+        }
+        if (contadorMinusculas < 3) {
+            errores.append("- Debe contener al menos 3 letras minúsculas.\n");
+            esValida = false;
+        }
+
+        // Al menos un número
+        if (!contrasena.matches(".*\\d.*")) {
+            errores.append("- Debe contener al menos un número.\n");
+            esValida = false;
+        }
+
+        // Resultado
+        System.out.println("\n[Hilo: " + Thread.currentThread().getName() + "]");
+        System.out.println("Contraseña: " + contrasena);
+
+        if (esValida) {
+            System.out.println("Contraseña válida.");
+        } else {
+            System.out.println("Contraseña inválida. Errores:");
+            System.out.println(errores.toString());
+        }
+    }
+}
+
+public class ValidadorConcurrente {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Thread> hilos = new ArrayList<>();
+
+        System.out.println("=== Validador de Contraseñas Concurrente ===");
+
+        System.out.print("\n¿Cuántas contraseñas deseas validar?: ");
+        int cantidad = scanner.nextInt();
+        scanner.nextLine(); // Limpiar buffer
+
+        for (int i = 0; i < cantidad; i++) {
+            System.out.print("\nIngresa la contraseña #" + (i + 1) + ": ");
+            String contrasena = scanner.nextLine();
+
+            ValidadorContrasena validador = new ValidadorContrasena(contrasena);
+            Thread hilo = new Thread(validador, "Hilo-" + (i + 1));
+            hilos.add(hilo);
+            hilo.start();
+        }
+
+        // Esperar a que todos los hilos terminen
+        for (Thread hilo : hilos) {
+            try {
+                hilo.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("\nValidación completada.");
+    }
+}
