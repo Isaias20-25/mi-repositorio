@@ -1,0 +1,296 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+// INTERFAZ
+interface Operacion {
+    double calcular();
+}
+
+// CLASE ABSTRACTA
+abstract class Figura {
+    protected String nombre;
+
+    public Figura(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+}
+
+// SUBCLASES DE FIGURA
+
+class Circulo extends Figura implements Operacion {
+    private double radio;
+    private boolean esArea;
+
+    public Circulo(double radio, boolean esArea) {
+        super("Círculo");
+        this.radio = radio;
+        this.esArea = esArea;
+    }
+
+    @Override
+    public double calcular() {
+        if (esArea) {
+            return Math.PI * radio * radio;
+        } else {
+            return 2 * Math.PI * radio;
+        }
+    }
+}
+
+class Cuadrado extends Figura implements Operacion {
+    private double lado;
+    private boolean esArea;
+
+    public Cuadrado(double lado, boolean esArea) {
+        super("Cuadrado");
+        this.lado = lado;
+        this.esArea = esArea;
+    }
+
+    @Override
+    public double calcular() {
+        if (esArea) {
+            return lado * lado;
+        } else {
+            return 4 * lado;
+        }
+    }
+}
+
+class Triangulo extends Figura implements Operacion {
+    private double base, altura, lado1, lado2, lado3;
+    private boolean esArea;
+
+    public Triangulo(double base, double altura, boolean esArea) {
+        super("Triángulo");
+        this.base = base;
+        this.altura = altura;
+        this.esArea = esArea;
+    }
+
+    public Triangulo(double lado1, double lado2, double lado3) {
+        super("Triángulo");
+        this.lado1 = lado1;
+        this.lado2 = lado2;
+        this.lado3 = lado3;
+        this.esArea = false;
+    }
+
+    @Override
+    public double calcular() {
+        if (esArea) {
+            return (base * altura) / 2;
+        } else {
+            return lado1 + lado2 + lado3;
+        }
+    }
+}
+
+class Rectangulo extends Figura implements Operacion {
+    private double base, altura;
+    private boolean esArea;
+
+    public Rectangulo(double base, double altura, boolean esArea) {
+        super("Rectángulo");
+        this.base = base;
+        this.altura = altura;
+        this.esArea = esArea;
+    }
+
+    @Override
+    public double calcular() {
+        if (esArea) {
+            return base * altura;
+        } else {
+            return 2 * (base + altura);
+        }
+    }
+}
+
+class Pentagono extends Figura implements Operacion {
+    private double lado, apotema;
+    private boolean esArea;
+
+    public Pentagono(double lado, double apotema, boolean esArea) {
+        super("Pentágono");
+        this.lado = lado;
+        this.apotema = apotema;
+        this.esArea = esArea;
+    }
+
+    public Pentagono(double lado) {
+        super("Pentágono");
+        this.lado = lado;
+        this.esArea = false;
+    }
+
+    @Override
+    public double calcular() {
+        if (esArea) {
+            return (5 * lado * apotema) / 2;
+        } else {
+            return 5 * lado;
+        }
+    }
+}
+
+// CLASE POTENCIA
+class Potencia implements Operacion {
+    private int base;
+    private int exponente;
+
+    public Potencia(int base, int exponente) {
+        this.base = base;
+        this.exponente = exponente;
+    }
+
+    @Override
+    public double calcular() {
+        return calcularPotencia(base, exponente);
+    }
+
+    private int calcularPotencia(int base, int exponente) {
+        if (exponente == 0) {
+            return 1;
+        } else {
+            return base * calcularPotencia(base, exponente - 1);
+        }
+    }
+}
+
+// PROGRAMA PRINCIPAL
+public class modulo 8{
+
+    static Scanner scanner = new Scanner(System.in);
+    static ArrayList<Double> resultados = new ArrayList<>();
+
+    public static void main(String[] args) {
+        boolean continuar = true;
+
+        System.out.println("Calculadora Geométrica");
+
+        while (continuar) {
+            try {
+                int figura = elegirFigura();
+                int operacion = elegirOperacion();
+                Operacion operacionRealizada = crearOperacion(figura, operacion);
+
+                double resultado = operacionRealizada.calcular();
+                resultados.add(resultado);
+
+                System.out.printf("\nResultado de la operación: %.2f\n", resultado);
+
+                System.out.print("\n¿Deseas realizar otra operación? (s/n): ");
+                String respuesta = scanner.next();
+                if (!respuesta.equalsIgnoreCase("s")) {
+                    continuar = false;
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Entrada inválida. Usa números correctos.");
+                scanner.nextLine(); // Limpiar
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+                scanner.nextLine(); // Limpiar
+            }
+        }
+
+        mostrarResultados();
+        System.out.println("\n¡Gracias por usar la calculadora!");
+    }
+
+    // Métodos auxiliares
+    public static int elegirFigura() {
+        System.out.println("\nFiguras disponibles:");
+        System.out.println("1. Círculo");
+        System.out.println("2. Cuadrado");
+        System.out.println("3. Triángulo");
+        System.out.println("4. Rectángulo");
+        System.out.println("5. Pentágono");
+        System.out.println("6. Potencia");
+        System.out.print("\nElige una figura u operación (1-6): ");
+        return scanner.nextInt();
+    }
+
+    public static int elegirOperacion() {
+        System.out.println("\nOperaciones disponibles:");
+        System.out.println("1. Área");
+        System.out.println("2. Perímetro");
+        System.out.println("3. Potencia");
+        System.out.print("\nElige una operación (1-3): ");
+        return scanner.nextInt();
+    }
+
+    public static Operacion crearOperacion(int figura, int operacion) {
+        switch (figura) {
+            case 1: // Círculo
+                System.out.print("Ingresa el radio: ");
+                double radio = scanner.nextDouble();
+                return new Circulo(radio, operacion == 1);
+
+            case 2: // Cuadrado
+                System.out.print("Ingresa el lado: ");
+                double lado = scanner.nextDouble();
+                return new Cuadrado(lado, operacion == 1);
+
+            case 3: // Triángulo
+                if (operacion == 1) {
+                    System.out.print("Ingresa la base: ");
+                    double baseT = scanner.nextDouble();
+                    System.out.print("Ingresa la altura: ");
+                    double alturaT = scanner.nextDouble();
+                    return new Triangulo(baseT, alturaT, true);
+                } else {
+                    System.out.print("Ingresa el lado 1: ");
+                    double lado1 = scanner.nextDouble();
+                    System.out.print("Ingresa el lado 2: ");
+                    double lado2 = scanner.nextDouble();
+                    System.out.print("Ingresa el lado 3: ");
+                    double lado3 = scanner.nextDouble();
+                    return new Triangulo(lado1, lado2, lado3);
+                }
+
+            case 4: // Rectángulo
+                System.out.print("Ingresa la base: ");
+                double baseR = scanner.nextDouble();
+                System.out.print("Ingresa la altura: ");
+                double alturaR = scanner.nextDouble();
+                return new Rectangulo(baseR, alturaR, operacion == 1);
+
+            case 5: // Pentágono
+                if (operacion == 1) {
+                    System.out.print("Ingresa el lado: ");
+                    double ladoP = scanner.nextDouble();
+                    System.out.print("Ingresa el apotema: ");
+                    double apotema = scanner.nextDouble();
+                    return new Pentagono(ladoP, apotema, true);
+                } else {
+                    System.out.print("Ingresa el lado: ");
+                    double ladoP = scanner.nextDouble();
+                    return new Pentagono(ladoP);
+                }
+
+            case 6: // Potencia
+                System.out.print("Ingresa la base: ");
+                int base = scanner.nextInt();
+                System.out.print("Ingresa el exponente: ");
+                int exponente = scanner.nextInt();
+                return new Potencia(base, exponente);
+
+            default:
+                throw new IllegalArgumentException("Figura no válida.");
+        }
+    }
+
+    public static void mostrarResultados() {
+        System.out.println("\n Resultados de Todas las Operaciones");
+        for (int i = 0; i < resultados.size(); i++) {
+            System.out.printf("Operación #%d: %.2f\n", (i + 1), resultados.get(i));
+        }
+    }
+}
