@@ -1,49 +1,34 @@
-import java.util.Scanner;
-
 public class VisitanteEdificio {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        // Información del visitante 
 
-        // Declaración de variables
-        byte edad;
-        short piso;
-        int idVisitante;
-        long telefono;
-        float temperatura;
-        double tiempoPermanencia;
-        char genero;
-        boolean autorizado;
+        // Edad del visitante
+        byte edad = 28;
 
-        // Solicitar datos
-        System.out.println("=== Registro de Visitante ===");
+        // Piso a visitar 
+        short piso = 5;
 
-        System.out.print("ID del visitante: ");
-        idVisitante = scanner.nextInt();
+        // Número de identificación
+        int idVisitante = 123456;
 
-        System.out.print("Edad del visitante: ");
-        edad = scanner.nextByte();
+        // Teléfono del visitante 
+        long telefono = 559912345678L;
 
-        System.out.print("Piso a visitar: ");
-        piso = scanner.nextShort();
+        // Temperatura corporal 
+        float temperatura = 36.6;
 
-        System.out.print("Número de teléfono: ");
-        telefono = scanner.nextLong();
+        // Tiempo de permanencia en minutos
+        double tiempoPermanencia = 45.5;
 
-        System.out.print("Temperatura corporal: ");
-        temperatura = scanner.nextFloat();
+        // Género del visitante (char)
+        char genero = 'M';
 
-        System.out.print("Tiempo de permanencia en minutos: ");
-        tiempoPermanencia = scanner.nextDouble();
+        // ¿El visitante está autorizado?
+        boolean autorizado = true;
 
-        System.out.print("Género (M/F): ");
-        genero = scanner.next().charAt(0);
-
-        System.out.print("¿Está autorizado? (true/false): ");
-        autorizado = scanner.nextBoolean();
-
-        // Mostrar los datos
-        System.out.println("\n=== Información del Visitante ===");
+        // Imprimir información
+        System.out.println("=== Información del Visitante ===");
         System.out.println("ID: " + idVisitante);
         System.out.println("Edad: " + edad + " años");
         System.out.println("Piso a visitar: " + piso);
@@ -52,8 +37,6 @@ public class VisitanteEdificio {
         System.out.println("Tiempo de permanencia: " + tiempoPermanencia + " minutos");
         System.out.println("Género: " + genero);
         System.out.println("Autorizado: " + autorizado);
-
-        scanner.close();
     }
 }
 
